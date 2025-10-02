@@ -1,0 +1,54 @@
+# To read configs from classpath and file system
+#spring:
+#  application:
+#    name: "configserver"
+#  profiles:
+#    active: native
+#  cloud:
+#    config:
+#      server:
+#        native:
+#          search-locations: "file:///Users//shan//Developer//Learnings//Springboot//config//"
+#          search-locations: "classpath:/config"
+
+# To read configs from GitHub repo
+spring:
+  application:
+    name: "configserver"
+  profiles:
+    active: git
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/Shanmugapriya173/eazybytes-config.git"
+          default-label: "main"
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+
+encrypt:
+  key: "45D81EC1EF61DF9AD8D3E5BB39759"
+
+server:
+  port: 8071
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true

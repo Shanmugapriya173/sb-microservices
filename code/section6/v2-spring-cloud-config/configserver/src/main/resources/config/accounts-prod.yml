@@ -1,0 +1,11 @@
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related PROD APIs"
+  contactDetails:
+    name: "Raji - Developer"
+    email: "raji@eazybank.com"
+  onCallSupport:
+    - (777) 777-1234
+    - (777) 777-1243
