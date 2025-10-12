@@ -27,7 +27,7 @@ services:
       start_period: 10s
     extends:
       file: common-config.yml
-      service: microservice-base-config
+      service: microservice-configserver-config
     depends_on:
       configserver:
         condition: service_healthy
@@ -48,7 +48,7 @@ services:
         condition: service_healthy
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
   loans:
     image: devopsshan/loans:s8
     container_name: loans_ms
@@ -63,7 +63,7 @@ services:
         condition: service_healthy
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
   cards:
     image: devopsshan/cards:s8
     container_name: cards_ms
@@ -78,7 +78,7 @@ services:
         condition: service_healthy
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 networks:
   eazybank:
     driver: bridge
