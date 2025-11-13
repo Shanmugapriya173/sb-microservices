@@ -1,4 +1,18 @@
 services:
+  redis:
+    image: redis
+    container_name: redis_ms
+    ports:
+      - 6379:6379
+    healthcheck:
+      #      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 10
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   configserver:
     image: devopsshan/configserver:s10
     container_name: configserver_ms
@@ -31,8 +45,8 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
-    environment:
-      SPRINT_APPLICATION_NAME: "eurekaserver"
+#    environment:
+#      SPRING_APPLICATION_NAME: "eurekaserver"
 
   accounts:
     image: devopsshan/accounts:s10
@@ -111,6 +125,10 @@ services:
         condition: service_healthy
       loans:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_DATA_REDIS_HOST: "redis"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
