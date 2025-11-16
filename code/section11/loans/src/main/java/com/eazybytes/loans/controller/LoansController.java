@@ -94,14 +94,15 @@ public class LoansController {
                     )
             )
     })
-    @GetMapping("fetch")
+    @GetMapping("/fetch")
     public ResponseEntity<LoansDto> fetchLoan(
             @RequestHeader("eazybank-correlation-id") String correlationId,
             @RequestParam
             @Pattern(regexp = "(^$|[0-9]{10})", message = "mobileNumber must be 10 digits")
             String mobileNumber) {
-        logger.debug("eazyBank-correlation-id found: {} ", correlationId);
+        logger.debug("fetchLoan() start");
         LoansDto loansDto = iLoansService.fetchLoan(mobileNumber);
+        logger.debug("fetchLoan() end");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(loansDto);
