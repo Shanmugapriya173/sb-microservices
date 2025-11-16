@@ -91,6 +91,19 @@ services:
       file: common-config.yml
       service: network-deploy-service
 
+  tempo:
+    image: grafana/tempo:2.6.1
+    container_name: tempo
+    command: -config.file /etc/tempo-config.yml
+    ports:
+      - "3110:3100"
+      - "4318:4318"
+    volumes:
+      - ../observability/tempo/tempo.yml:/etc/tempo-config.yml
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   grafana:
     image: grafana/grafana:latest
     environment:
@@ -215,6 +228,8 @@ services:
     extends:
       file: common-config.yml
       service: microservice-base-config
+    environment:
+      OTEL_SERVICE_NAME: configserver
 
   eurekaserver:
     image: devopsshan/eurekaserver:s11
@@ -233,8 +248,9 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
-#    environment:
+    environment:
 #      SPRING_APPLICATION_NAME: "eurekaserver"
+      OTEL_SERVICE_NAME: eurekaserver
 
   accounts:
     image: devopsshan/accounts:s11
@@ -257,6 +273,9 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    environment:
+      OTEL_SERVICE_NAME: accounts
+
   loans:
     image: devopsshan/loans:s11
     container_name: loans_ms
@@ -278,6 +297,8 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    environment:
+      OTEL_SERVICE_NAME: loans
 
   cards:
     image: devopsshan/cards:s11
@@ -300,6 +321,8 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    environment:
+      OTEL_SERVICE_NAME: cards
 
   gatewayserver:
     image: devopsshan/gatewayserver:s11
@@ -316,6 +339,8 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    environment:
+      OTEL_SERVICE_NAME: gatewayserver
 networks:
   eazybank:
     driver: bridge
