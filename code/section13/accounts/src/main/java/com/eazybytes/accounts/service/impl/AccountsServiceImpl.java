@@ -2,6 +2,7 @@ package com.eazybytes.accounts.service.impl;
 
 import com.eazybytes.accounts.constants.AccountsConstants;
 import com.eazybytes.accounts.dto.AccountsDto;
+import com.eazybytes.accounts.dto.AccountsMsgDto;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.entity.Accounts;
 import com.eazybytes.accounts.entity.Customer;
@@ -13,6 +14,9 @@ import com.eazybytes.accounts.repository.AccountsRepository;
 import com.eazybytes.accounts.repository.CustomerRepository;
 import com.eazybytes.accounts.service.IAccountsService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,8 +27,11 @@ import java.util.Random;
 @AllArgsConstructor // When there's only one constructor in the class, no need to use @Autowired explicitly
 public class AccountsServiceImpl implements IAccountsService {
 
+    private static final Logger log = LoggerFactory.getLogger(AccountsServiceImpl.class);
+
     private AccountsRepository accountsRepository;
     private CustomerRepository customerRepository;
+    private StreamBridge streamBridge;
 
     /**
      * This method creates a new account for a given customer.
@@ -40,8 +47,18 @@ public class AccountsServiceImpl implements IAccountsService {
             throw new CustomerAlreadyExistsException("Customer already exists with mobile number: " + customerDto.getMobileNumber());
         }
 
-        Customer newCustomer = customerRepository.save(customer);
-        accountsRepository.save(createNewAccount(newCustomer));
+        Customer savedCustomer = customerRepository.save(customer);
+        Accounts savedAccount = accountsRepository.save(createNewAccount(savedCustomer));
+        sendCommunication(savedAccount, savedCustomer);
+    }
+
+    private void sendCommunication(Accounts account, Customer customer) {
+        var accountsMsgDto = new AccountsMsgDto(account.getAccountNumber(),
+                customer.getName(), customer.getEmail(), customer.getMobileNumber());
+
+        log.info("Sending communication message for the details: {}", accountsMsgDto);
+        boolean result = streamBridge.send("send-communication", accountsMsgDto);
+        log.info("Is the communication request successfully triggered? {}", result);
     }
 
     private Accounts createNewAccount(Customer customer) {
