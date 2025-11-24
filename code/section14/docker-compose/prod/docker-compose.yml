@@ -362,7 +362,7 @@ services:
       OTEL_SERVICE_NAME: cards
 
   message:
-    image: "eazybytes/message:s14"
+    image: "devopsshan/message:s14"
     container_name: message-ms
     depends_on:
       kafka:
