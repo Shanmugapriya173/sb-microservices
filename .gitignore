@@ -25,4 +25,4 @@ replay_pid*
 
 .DS_Store
 
-code/section11/docker-compose/prod/.data/
+.*/
