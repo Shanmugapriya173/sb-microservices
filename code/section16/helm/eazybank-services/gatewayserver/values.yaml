@@ -9,7 +9,7 @@ appName: gatewayserver
 replicaCount: 1
 
 image:
-  repository: eazybytes/gatewayserver
+  repository: devopsshan/gatewayserver
   tag: s14
 
 containerPort: 8072

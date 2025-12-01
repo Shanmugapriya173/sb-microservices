@@ -9,7 +9,7 @@ appName: message
 replicaCount: 1
 
 image:
-  repository: eazybytes/message
+  repository: devopsshan/message
   tag: s14
 
 containerPort: 9010

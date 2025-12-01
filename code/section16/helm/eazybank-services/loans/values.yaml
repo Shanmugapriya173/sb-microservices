@@ -9,7 +9,7 @@ appName: loans
 replicaCount: 1
 
 image:
-  repository: eazybytes/loans
+  repository: devopsshan/loans
   tag: s14
 
 containerPort: 8090
